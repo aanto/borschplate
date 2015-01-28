@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ax-template.js demo &amp; test</title>
+	<meta charset="utf-8" />
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="ldt/TextareaDecorator.css">
+	<style>
+		/* highlight styles */
+		.ldt .comment { color: silver; }
+		.ldt .string { color: yellow; }
+		.ldt .number { color: navy; }
+		/* setting inline-block and margin to avoid misalignment bug in windows */
+		.ldt .keyword { color: #f9f; font-weight: bold; display: inline-block; margin-bottom: -1px; }
+		.ldt .variable { color: cyan; }
+		.ldt .define { color: lightblue; }
+		.ldt .tagAx { color: #fff; border-bottom: 2px solid #ff6d00;}
+		.ldt .other { color: #fff;}
+		.ldt .op { color: #fff;}
+	</style>
+
+	<!-- Own styles -->
+	<link rel="stylesheet" type="text/css" href="/axite.client/axite.css" />
+	<style type="text/css">
+	 	BODY  {background: #ff6d00; color: #333; padding: 3ex; padding-left: 32ex; font-size: 12pt;}
+
+	 	H1 {color: #fff; font-size: 60pt; position: fixed; top: -0.4ex; left: 12ex; padding: 0; margin: 0;}
+	 	H1 SMALL {font-weight: normal; opacity: .5; font-size: 10pt; margin-left: 5ex; margin-top: -2ex;}
+
+	 	ASIDE {position: fixed; width: 30ex; left: 0; top: 10ex; padding: 3ex;}
+		NAV {font-size: 20pt; color: #fff;}
+		NAV NAV {font-size: 80%; padding: 0 0 2ex 2ex;}
+		NAV A {display: block; color: inherit; margin: 1ex 0;}
+		NAV NAV A {margin: 0;}
+
+		ARTICLE {margin: 8ex 0; position: relative; z-index: 10}
+		ARTICLE > HEADER {font: bold 40px sans-serif; color: #fff; padding: 1ex 0 0 0; margin: 0; width: 11ex; text-align: right;}
+
+		SECTION {background: hsla(0, 0%, 100%, .9); padding: 3ex; margin-bottom: 2ex;}
+		SECTION HEADER {}
+
+		SECTION TEXTAREA,
+		SECTION PRE {margin: 0; padding: 2ex; background: #3f3f3f; border: none; font: normal 10pt monospace; line-height: 140%;}
+		/*SECTION PRE {background: transparent;}*/
+
+		SECTION > LABEL {display: block; margin: 2ex 0 0 0; font: bold 11pt sans-serif;}
+		SECTION BUTTON {}
+		SECTION > DIV {overflow: hidden !important;}
+		SECTION DIV.html {}
+		SECTION DIV.js {}
+		SECTION DIV.output {background: #fff; min-height: 3ex; padding: 1ex;}
+		TABLE {}
+		TD, TH {padding: 1ex 2ex; background-color: #fff;}
+		TD:empty {background-color: transparent;}
+	</style>
+</head>
+<body>
+	<h1>
+		ax-template.js
+		<small>No shield-shaped logo included</small>
+	</h1>
+	<aside>
+		<nav>
+			<a href="#About">#About</a>
+			<a href="#Try">#Try</a>
+			<nav>
+				<a href="#ultimate-question">ultimate-question.tpl</a>
+				<a href="#hello-earth">hello-earth.tpl</a>
+				<a href="#simple-variable">simple-variable.tpl</a>
+				<a href="#simple-list">simple-list.tpl</a>
+				<a href="#with-backbone">with-backbone.tpl</a>
+				<a href="#model-binding">model-binding.tpl</a>
+				<!-- <a href="#complex-case">complex-case.tpl</a> -->
+			</nav>
+			<a href="#Get">#Download</a>
+			<a href="#Learn">#Docs</a>
+		</nav>
+	</aside>
+
+	<article>
+		<header id="About">About</header>
+		<section>
+			<p>Welcome!</p>
+			<p>Ax-template.js is small and fast JavaScript HTML template engine for both client and server use.</p>
+		</section>
+	</article>
+
+	<article>
+		<header id="Try">Try</header>
+
+
+		<section id="ultimate-question">
+			<label>ultimate-question.tpl</label>
+			<textarea ax:reject id="ultimate-question-tpl" class="html">
+<div ax:template>
+	<label>The answer to Ultimate Question of Life, the Universe, and Everything is...</label>
+	<input ax:key="userEntry" ax:control placeholder="type here">
+	<span ax:key="userEntry" ax:render="skip">
+		<span ax:if="value == ''"><b> — empty</b></span>
+		<span ax:if="value !== '' &amp;&amp; value < 42"><b style="color:red"> — too small</b></span>
+		<span ax:if="value > 42"><b style="color:red"> — too large</b></span>
+		<span ax:if="isNaN(value)"><b> — not a number</b></span>
+		<span ax:if="value == 42"><b style="color:green"> — right!</b> </span>
+		<button ax:if="el.disabled = (value != 42), true" type="submit">submit</button>
+	</span>
+</div>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="ultimate-question-js" class="js">
+// no code needed
+			</textarea>
+			<button onclick="tryThis('ultimate-question')">Try</button>
+
+			<label>DIV#ultimate-question-output</label>
+			<div id="ultimate-question-output" class="output">
+
+			</div>
+		</section>
+
+
+
+
+		<section id="ultimate-question-2">
+			<label>ultimate-question-2.tpl</label>
+			<textarea ax:reject id="ultimate-question-2-tpl" class="html">
+<div ax:template="myTemplate">
+	<label>The answer to Ultimate Question of Life, the Universe, and Everything is...</label>
+	<input ax:key="userEntry" ax:control placeholder="type here">
+	<p ax:key="userEntry" ax:assign="userEntry" ax:render="skip">
+		<span ax:if="'$userEntry' == ''"><b> — empty</b></span>
+		<span ax:if="'$userEntry' !== '' &amp;&amp; '$userEntry' < 42"><b style="color:red"> — too small</b></span>
+		<span ax:if="'$userEntry' > 42"><b style="color:red"> — too large</b></span>
+		<span ax:if="isNaN('$userEntry')"><b> — not a number</b></span>
+		<span ax:if="'$userEntry' == 42"><b style="color:green"> — right!</b> </span>
+		<button ax:if="el.disabled = ('$userEntry' != 42), true" ax:render="none" type="submit">submit</button>
+	</p>
+</div>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="ultimate-question-2-js" class="js">
+// no code needed
+			</textarea>
+			<button onclick="tryThis('ultimate-question-2')">Try</button>
+
+			<label>DIV#ultimate-question-2-output</label>
+			<div id="ultimate-question-2-output" class="output">
+
+			</div>
+		</section>
+
+
+
+
+		<section id="hello-earth">
+			<label>hello-earth.tpl</label>
+			<textarea ax:reject id="hello-earth-tpl" class="html">
+<p ax:template="myTemplate">
+	Hello, <span ax:key="myDataKey">Pre-parse value</span>!
+</p>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="hello-earth-js" class="js">
+// The template is automatically created under global scope (window.myTemplate)
+myTemplate.setValue("myDataKey", "Earth")
+			</textarea>
+			<button onclick="tryThis('hello-earth')">Try</button>
+
+			<label>DIV#hello-earth-output</label>
+			<div id="hello-earth-output" class="output">
+
+			</div>
+		</section>
+
+
+
+		<section id="simple-variable">
+			<label>simple-variable.tpl</label>
+			<textarea ax:reject id="simple-variable-tpl" class="html">
+<p>
+	Hello, <span ax:key="$stellarSystem/planets/3:name">Pre-parse value</span>!
+</p>
+<p>
+	And the key is: <span ax:key="$stellarSystem/planets/3:name" ax:render="key">unknown</span>!
+</p>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="simple-variable-js" class="js">
+// Create template object (global scope is not affected)
+var template = new BorschPlate("simple-variable-output")
+
+// Set $stellarSystem varialbe to "sol". This will trigger template refresh
+template.refresh(null, {stellarSystem: "sol"})
+
+// Fill up the template with value (event-emitter style)
+template.emit("setValue", "sol/planets/3:name", "Earth")
+			</textarea>
+			<button onclick="tryThis('simple-variable')">Try</button>
+
+			<label>DIV#simple-variable-output</label>
+			<div id="simple-variable-output" class="output">
+			</div>
+		</section>
+
+
+
+		<section id="simple-list">
+			<label>simple-list.tpl</label>
+			<textarea ax:reject id="simple-list-tpl" class="html">
+<ol ax:list="sol/planets/">
+	<li>
+		Hello,
+		<span ax:key="$item:name" ax:modify="capitalize(value)">Pre-parse value</span>,
+		aslo called
+		<span ax:key="$item:greekName">Pre-parse value</span>!
+		<span ax:key="$item:comment" ax:if="value" ax:modify="'('+value+')'"></span>
+	</li>
+</ol>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="simple-list-js" class="js">
+// Initialize template
+var template = new BorschPlate("simple-list-output")
+
+// Go!
+template.refresh()
+/*
+template.setCollectionKeys("sol/planets", ["mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune"])
+template.setValue("mars:greekName", "Ares")
+template.setValue("jupiter:greekName", "Zeus")
+template.setValue("saturn:greekName", "Cronus")
+template.setValue("mercury:greekName", "Hermes")
+template.setValue("venus:greekName", "Aphrodite")
+template.setValue("neptune:greekName", "Poseidon")
+template.setValue("uranus:greekName", "Uranus")
+template.setValue("uranus:comment", "Yes, they used a Greek name for this planet")
+*/
+
+window.capitalize = function (inStr) {
+	return inStr.charAt(0).toUpperCase() + inStr.slice(1);
+}
+/*
+template.setCollection("sol/planets/", {
+	mars    : {name: "mars",    greekName: "Ares"},
+	mercury : {name: "mercury", greekName: "...hey, I frogot the name!"},
+	venus   : {name: "venus",   greekName: "Aphrodite"},
+	jupiter : {name: "jupiter", greekName: "Zeus"},
+	saturn  : {name: "saturn",  greekName: "Cronus"},
+	uranus  : {name: "uranus",  greekName: "Uranus", comment: "Yes, they used a Greek name for this planet"}
+})
+template.setValue("mercury:greekName", "Hermes")
+*/
+
+template.setCollection("sol/planets/", [
+	{name: "mars",    greekName: "Ares"},
+	{name: "mercury", greekName: "...hey, I frogot the name!"},
+	{name: "venus",   greekName: "Aphrodite"},
+	{name: "jupiter", greekName: "Zeus"},
+	{name: "saturn",  greekName: "Cronus"},
+	{name: "caelus",  greekName: "Uranus", comment: "Yes, it was a Greek name"}
+])
+
+template.setValue("sol/planets/1:greekName", "Hermes")
+			</textarea>
+			<button onclick="tryThis('simple-list')">Try</button>
+
+			<label>DIV#simple-list-output</label>
+			<div id="simple-list-output" class="output">
+			</div>
+		</section>
+
+
+		<section id="with-backbone">
+			<label>with-backbone.tpl</label>
+			<textarea ax:reject id="with-backbone-tpl" class="html">
+			<form>Add your planet: <input name="planetName" /><button class="addPlanet">Add one</button></form>
+<ol ax:list="sol/planets">
+	<li>
+		Hello,
+		<span ax:key="$item:name">Pre-parse value</span>
+		<span ax:key="$item:greekName" ax:if="value" ax:render="none">, also called</span>
+		<span ax:key="$item:greekName">Pre-parse value</span>!
+		<span ax:key="$item:comment" ax:if="value" ax:modify="'('+value+')'"></span>
+	</li>
+</ol>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="with-backbone-js" class="js">
+var List = Backbone.Collection.extend()
+
+var list = new List([
+	{name: "mars",    greekName: "Ares"},
+	{name: "mercury"},
+	{name: "venus",   greekName: "Aphrodite"},
+	{name: "mars",    greekName: "Hermes"},
+	{name: "jupiter", greekName: "Zeus"},
+	{name: "saturn"},
+	{name: "caelus",  greekName: "Uranus", comment: "Yes, it was a Greek name"}
+])
+
+
+new (Backbone.View.extend({
+	el: "#with-backbone-output",
+	model: list,
+	events: {
+		"click .addPlanet": "addItem"
+	},
+	addItem: function (event) {
+		event.preventDefault()
+		this.model.add({name: event.target.form.planetName.value})
+	},
+	initialize: function () {
+		_.bindAll(this, "initialize", "render")
+
+		this.listenTo(this.model, "change", this.render)
+		this.listenTo(this.model, "add", this.render)
+
+		this.template = new BorschPlate(this.el)
+		this.template.refresh()
+
+		this.render()
+	},
+	render: function () {
+		this.template.setCollection("sol/planets", this.model)
+	}
+}))
+			</textarea>
+			<button onclick="tryThis('with-backbone')">Try</button>
+
+			<label>DIV#with-backbone-output</label>
+			<div id="with-backbone-output" class="output">
+			</div>
+		</section>
+
+
+
+
+
+		<section id="model-binding">
+			<label>model-binding.tpl</label>
+			<textarea ax:reject id="model-binding-tpl" class="html">
+&lt;p>
+	Hello, &lt;span ax:key="$stellarSystem/planets/3:name">Pre-parse value&lt;/span>!
+&lt;/p>
+			</textarea>
+
+			<label>model.js</label>
+			<textarea ax:reject id="model-binding-js" class="js">
+// Create mock model that will represent server response
+var mockModel = {"sol/planets/3:name": "Earth"}
+
+// Create template object
+var template = new BorschPlate("model-binding-output")
+
+// Template will emit requestValue on refresh, so let's handle this event
+template.on("requestValue", function (key) {
+	var response = mockModel[key]
+	// Fill up the template with value (event-emitter style)
+	template.emit("setValue", key, response)
+})
+
+// Set $stellarSystem varialbe to "sol". This will trigger template refresh
+template.refresh(null, {stellarSystem: "sol"})
+			</textarea>
+			<button onclick="tryThis('model-binding')">Try</button>
+
+			<label>DIV#model-binding-output</label>
+			<div id="model-binding-output" class="output">
+			</div>
+		</section>
+
+
+<!--
+
+		<section id="complex-case">
+			<header>complex-case.tpl</header>
+
+
+// ******* Mock model BEGIN *****************************************************
+var MockModel = function () {
+	ax.extend(this, ax.Observer.prototype)
+}
+
+MockModel.prototype = {
+	data: {
+		"sol/planets/1:name": "Mercury",
+		"sol/planets/2:name": "Venus",
+		"sol/planets/3:name": "Earth",
+		"sol/planets/4:name": "Mars",
+		"sol/planets/5:name": "Jupiter",
+		"sol/planets/foo:name": "Saturn",
+		"sol/planets/1:character": "tiny",
+		"sol/planets/2:character": "hot",
+		"sol/planets/3:character": "lovely",
+		"sol/planets/4:character": "mid",
+		"sol/planets/5:character": "huge",
+		"sol/planets/foo:character": "far"
+	},
+
+	requestCollectionKeys: function (collectionKey) {
+		this.emit("setCollectionKeys", collectionKey, [
+			"sol/planets/1",
+			"sol/planets/2",
+			"sol/planets/3",
+			"sol/planets/4",
+			"sol/planets/5",
+			"sol/planets/foo"
+		])
+	},
+
+	requestValue: function (key) {
+		this.emit("setValue", key, this.data[key])
+	}
+}
+
+var mockModel = new MockModel()
+// ******* Mock model END *******************************************************
+
+// Initialize template
+var template = new BorschPlate("simple-list-output")
+
+// Bind template handlers to model events
+mockModel.passEventsTo(template, "setCollectionKeys", "setValue")
+
+// Bind model handlers to template events
+template.passEventsTo(mockModel, "requestCollectionKeys", "requestValue")
+
+// Go!
+template.refresh()
+		</section>
+ -->
+
+	</article>
+
+	<article>
+		<header id="Get">Download</header>
+		<section>
+			<table>
+				<tr>
+					<td rowspan="2">Dependencies</td>
+					<td><a href="ax-5-polyfill.js">ax-5-polyfill.js</a> 1K</td>
+					<td><a href="ax-5-polyfill-min.js">ax-5-polyfill-min.js</a> 1K</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><a href="ax-5.js">ax-5.js</a> 18K</td>
+					<td><a href="ax-5-min.js">ax-5-min.js</a> 9K</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><a href="ax-templates.js">ax-templates.js</a> 18K</td>
+					<td><a href="ax-templates-min.js">ax-templates-min.js</a> 6K</td>
+					<td><b><a href="ax-templates-bundle.js">ax-templates-bundle.js</a> 9K</b> (minified bundle, no dependencies)</td>
+				</tr>
+				<tr>
+					<td>Editor addon</td>
+					<td><a href="ax-templates-editor.js">ax-templates-editor.js</a> 15K</td>
+					<td><a href="ax-templates-editor-min.js">ax-templates-editor-min.js</a> 8K</td>
+					<td></td>
+				</tr>
+			</table>
+		</section>
+	</article>
+
+	<article>
+		<header id="Learn">Learn</header>
+		<section>
+			ax-templates.js is small and fast JavaScript HTML template engine for both client and server use.
+		</section>
+	</article>
+
+	<script type="text/javascript" src="/axite.client/require.js" data-main="main.js"></script>
+</body>
+</html>
